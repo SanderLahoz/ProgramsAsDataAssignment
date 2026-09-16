@@ -122,3 +122,44 @@ Main ⇒ Expr EOF                                                               
 We drew the derivation from Exercise 3.3 as a tree.
 
 ![DFA diagram](Images/DerivationTree.png)
+
+
+------------------------------------------------------------------------------------------------
+
+
+## Running the Expr Parser (Exercise 3.5)
+
+### Prerequisites
+- .NET 9 SDK installed
+
+### 1. Build (generates the lexer and parser from ExprLex.fsl / ExprPar.fsy)
+```bash
+cd Expr
+dotnet build parse.fsproj
+```
+
+### 2. Start an interactive F# session
+```bash
+dotnet fsi
+```
+
+### 3. Reference the FsLexYacc runtime (provides the Lexing/Parsing namespaces)
+```fsharp
+#r "nuget: FsLexYacc.Runtime, 11.3.0";;
+```
+
+### 4. Load the project files, in dependency order
+```fsharp
+#load "Absyn.fs";;
+#load "Expr.fs";;
+#load "ExprPar.fs";;
+#load "ExprLex.fs";;
+#load "Parse.fs";;
+```
+
+### 5. Open the parser module and test
+```fsharp
+open Parse;;
+fromString "1+2*3";;
+fromString "let z = 17 in z + 2*3 end";;
+```
