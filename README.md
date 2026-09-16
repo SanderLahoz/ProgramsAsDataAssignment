@@ -167,3 +167,12 @@ fromString "let z = 17 in z + 2*3 end";;
 ## (Exercise 3.6)
 
 You can find the implementation for this inside Expr/Parse.fs see function compString.
+
+## (Exercise 3.7)
+
+For this we changed the following files 
+1. ExprLex.fsl
+2. ExprPar.fsy
+3. Absyn.fs
+4. Expr.fs
+
