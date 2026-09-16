@@ -171,10 +171,10 @@ You can find the implementation for this inside Expr/Parse.fs see function compS
 ## (Exercise 3.7)
 
 For this we changed the following files 
-1. ExprLex.fsl
-2. ExprPar.fsy
-3. Absyn.fs
-4. Expr.fs
+1. Expr/ExprLex.fsl
+2. Expr/ExprPar.fsy
+3. Expr/Absyn.fs
+4. Expr/Expr.fs
 
 
 ## (Exercise 4.1)
