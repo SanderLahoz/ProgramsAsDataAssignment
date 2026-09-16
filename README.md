@@ -176,3 +176,7 @@ For this we changed the following files
 3. Absyn.fs
 4. Expr.fs
 
+
+## (Exercise 4.1)
+We followed the instructions to make sure that all of the code works one thing to note is that we use dotnet 9 
+and not dotnet 10 so if you need to follow the same instructions make sure to replace 10.0 with 9.0 
