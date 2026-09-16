@@ -163,3 +163,7 @@ open Parse;;
 fromString "1+2*3";;
 fromString "let z = 17 in z + 2*3 end";;
 ```
+
+## (Exercise 3.6)
+
+You can find the implementation for this inside Expr/Parse.fs see function compString.
