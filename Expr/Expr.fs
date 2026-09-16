@@ -35,6 +35,7 @@ let rec fmt1 (e: expr) : string =
     | Var x -> x
     | Let(x, erhs, ebody) -> String.concat " " [ "let"; x; "="; fmt1 erhs; "in"; fmt1 ebody; "end" ]
     | Prim(ope, e1, e2) -> String.concat "" [ "("; fmt1 e1; ope; fmt1 e2; ")" ]
+    | If(e1, e2, e3) -> String.concat " " [ "if"; fmt1 e1; "then"; fmt1 e2; "else"; fmt1 e3 ]
 
 (* Format expressions as strings, avoiding excess parentheses *)
 
@@ -49,6 +50,7 @@ let rec fmt2 (ctxpre: int) (e: expr) =
          | "-" -> wrappar ctxpre 6 [ fmt2 5 e1; ope; fmt2 6 e2 ]
          | "*" -> wrappar ctxpre 7 [ fmt2 6 e1; ope; fmt2 7 e2 ]
          | _ -> raise (Failure "unknown primitive"))
+    | If(e1, e2, e3) -> String.concat " " [ "if"; fmt2 -1 e1; "then"; fmt2 -1 e2; "else"; fmt2 -1 e3 ]
 
 and wrappar ctxpre pre ss =
     if pre <= ctxpre then
@@ -79,6 +81,9 @@ let rec eval (e: expr) (env: (string * int) list) : int =
     | Prim("*", e1, e2) -> eval e1 env * eval e2 env
     | Prim("-", e1, e2) -> eval e1 env - eval e2 env
     | Prim _ -> raise (Failure "unknown primitive")
+    | If(e1, e2, e3) ->
+        let v = eval e1 env
+        if v > 0 then eval e2 env else eval e3 env
 
 (* Evaluate in empty environment: expression must have no free variables: *)
 
@@ -101,6 +106,7 @@ let rec closedin (e: expr) (env: string list) : bool =
         let env1 = x :: env
         closedin erhs env && closedin ebody env1
     | Prim(ope, e1, e2) -> closedin e1 env && closedin e2 env
+    | If(e1, e2, e3) -> closedin e1 env && closedin e2 env && closedin e3 env
 
 (* An expression is closed if it is closed in the empty environment *)
 
@@ -135,6 +141,7 @@ let rec freevars e : string list =
     | Var x -> [ x ]
     | Let(x, erhs, ebody) -> union (freevars erhs) (minus (freevars ebody) [ x ])
     | Prim(ope, e1, e2) -> union (freevars e1) (freevars e2)
+    | If(e1, e2, e3) -> union (union (freevars e1) (freevars e2)) (freevars e3)
 
 (* Alternative definition of closed *)
 
@@ -151,6 +158,7 @@ type texpr = (* target expressions *)
     | TVar of int (* index into runtime environment *)
     | TLet of texpr * texpr (* erhs and ebody                 *)
     | TPrim of string * texpr * texpr
+    | TIf of texpr * texpr * texpr
 
 
 (* Map variable name to variable index at compile-time *)
@@ -175,6 +183,7 @@ let rec tcomp e (cenv: string list) : texpr =
         let cenv1 = x :: cenv
         TLet(tcomp erhs cenv, tcomp ebody cenv1)
     | Prim(ope, e1, e2) -> TPrim(ope, tcomp e1 cenv, tcomp e2 cenv)
+    | If(e1, e2, e3) -> TIf(tcomp e1 cenv, tcomp e2 cenv, tcomp e3 cenv)
 
 (* Evaluation of target expressions with variable indexes.  The
    run-time environment renv is a list of variable values (ints).  *)
@@ -191,6 +200,9 @@ let rec teval (e: texpr) (renv: int list) : int =
     | TPrim("*", e1, e2) -> teval e1 renv * teval e2 renv
     | TPrim("-", e1, e2) -> teval e1 renv - teval e2 renv
     | TPrim _ -> raise (Failure "unknown primitive")
+    | TIf(e1, e2, e3) ->
+        let v = teval e1 renv
+        if v > 0 then teval e2 renv else teval e3 renv
 
 (* Correctness: eval e [] equals teval (tcomp e []) [] *)
 
