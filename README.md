@@ -152,7 +152,7 @@ dotnet fsi
 ```fsharp
 #load "Absyn.fs";;
 #load "Expr.fs";;
-#load "ExprPar.fs";;
+#load "ExprPar.fs;;
 #load "ExprLex.fs";;
 #load "Parse.fs";;
 ```
@@ -180,3 +180,7 @@ For this we changed the following files
 ## (Exercise 4.1)
 We followed the instructions to make sure that all of the code works one thing to note is that we use dotnet 9 
 and not dotnet 10 so if you need to follow the same instructions make sure to replace 10.0 with 9.0 
+
+## (Exercise 4.2)
+Find our implementation of these expressions inside of the Fun/Fun.fs file we have annotated the code 
+with a comment so that you can see what we wrote.
