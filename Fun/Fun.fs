@@ -24,7 +24,7 @@ let rec lookup env x =
 
 type value =
     | Int of int
-    | Closure of string * string * expr * value env (* (f, x, fBody, fDeclEnv) *)
+    | Closure of string * string list * expr * value env (* (f, [x1..xn], fBody, fDeclEnv) *)
 
 let rec eval (e: expr) (env: value env) : int =
     match e with
@@ -52,16 +52,20 @@ let rec eval (e: expr) (env: value env) : int =
     | If(e1, e2, e3) ->
         let b = eval e1 env
         if b <> 0 then eval e2 env else eval e3 env
-    | Letfun(f, x, fBody, letBody) ->
-        let bodyEnv = (f, Closure(f, x, fBody, env)) :: env
+    | Letfun(f, xs, fBody, letBody) ->
+        let bodyEnv = (f, Closure(f, xs, fBody, env)) :: env
         eval letBody bodyEnv
-    | Call(Var f, eArg) ->
+    | Call(Var f, eArgs) ->
         let fClosure = lookup env f
 
         match fClosure with
-        | Closure(f, x, fBody, fDeclEnv) ->
-            let xVal = Int(eval eArg env)
-            let fBodyEnv = (x, xVal) :: (f, fClosure) :: fDeclEnv
+        | Closure(f, xs, fBody, fDeclEnv) ->
+            let xVals = List.map (fun eArg -> Int(eval eArg env)) eArgs
+
+            if List.length xs <> List.length xVals then
+                failwith ("eval Call: wrong number of arguments to " + f)
+
+            let fBodyEnv = List.zip xs xVals @ (f, fClosure) :: fDeclEnv
             eval fBody fBodyEnv
         | _ -> failwith "eval Call: not a function"
     | Call _ -> failwith "eval Call: not first-order function"
@@ -72,16 +76,17 @@ let run e = eval e []
 
 (* Examples in abstract syntax *)
 
-let ex1 = Letfun("f1", "x", Prim("+", Var "x", CstI 1), Call(Var "f1", CstI 12))
+let ex1 =
+    Letfun("f1", [ "x" ], Prim("+", Var "x", CstI 1), Call(Var "f1", [ CstI 12 ]))
 
 (* Example: factorial *)
 
 let ex2 =
     Letfun(
         "fac",
-        "x",
-        If(Prim("=", Var "x", CstI 0), CstI 1, Prim("*", Var "x", Call(Var "fac", Prim("-", Var "x", CstI 1)))),
-        Call(Var "fac", Var "n")
+        [ "x" ],
+        If(Prim("=", Var "x", CstI 0), CstI 1, Prim("*", Var "x", Call(Var "fac", [ Prim("-", Var "x", CstI 1) ]))),
+        Call(Var "fac", [ Var "n" ])
     )
 
 (* let fac10 = eval ex2 [("n", Int 10)];; *)
@@ -91,9 +96,9 @@ let ex2 =
 let ex3 =
     Letfun(
         "deep",
-        "x",
-        If(Prim("=", Var "x", CstI 0), CstI 1, Call(Var "deep", Prim("-", Var "x", CstI 1))),
-        Call(Var "deep", Var "count")
+        [ "x" ],
+        If(Prim("=", Var "x", CstI 0), CstI 1, Call(Var "deep", [ Prim("-", Var "x", CstI 1) ])),
+        Call(Var "deep", [ Var "count" ])
     )
 
 let rundeep n = eval ex3 [ ("count", Int n) ]
@@ -101,24 +106,28 @@ let rundeep n = eval ex3 [ ("count", Int n) ]
 (* Example: static scope (result 14) or dynamic scope (result 25) *)
 
 let ex4 =
-    Let("y", CstI 11, Letfun("f", "x", Prim("+", Var "x", Var "y"), Let("y", CstI 22, Call(Var "f", CstI 3))))
+    Let("y", CstI 11, Letfun("f", [ "x" ], Prim("+", Var "x", Var "y"), Let("y", CstI 22, Call(Var "f", [ CstI 3 ]))))
 
 (* Example: two function definitions: a comparison and Fibonacci *)
 
 let ex5 =
     Letfun(
         "ge2",
-        "x",
+        [ "x" ],
         Prim("<", CstI 1, Var "x"),
         Letfun(
             "fib",
-            "n",
+            [ "n" ],
             If(
-                Call(Var "ge2", Var "n"),
-                Prim("+", Call(Var "fib", Prim("-", Var "n", CstI 1)), Call(Var "fib", Prim("-", Var "n", CstI 2))),
+                Call(Var "ge2", [ Var "n" ]),
+                Prim(
+                    "+",
+                    Call(Var "fib", [ Prim("-", Var "n", CstI 1) ]),
+                    Call(Var "fib", [ Prim("-", Var "n", CstI 2) ])
+                ),
                 CstI 1
             ),
-            Call(Var "fib", CstI 25)
+            Call(Var "fib", [ CstI 25 ])
         )
     )
 
@@ -130,35 +139,35 @@ let ex5 =
 let ex6 =
     Letfun(
         "sum",
-        "n",
-        If(Prim("=", Var "n", CstI 0), CstI 0, Prim("+", Var "n", Call(Var "sum", Prim("-", Var "n", CstI 1)))),
-        Call(Var "sum", CstI 1000)
+        [ "n" ],
+        If(Prim("=", Var "n", CstI 0), CstI 0, Prim("+", Var "n", Call(Var "sum", [ Prim("-", Var "n", CstI 1) ]))),
+        Call(Var "sum", [ CstI 1000 ])
     )
 
 // 2.
 let ex7 =
     Letfun(
         "pow8",
-        "n",
-        If(Prim("=", Var "n", CstI 0), CstI 1, Prim("*", CstI 3, Call(Var "pow8", Prim("-", Var "n", CstI 1)))),
-        Call(Var "pow8", CstI 8)
+        [ "n" ],
+        If(Prim("=", Var "n", CstI 0), CstI 1, Prim("*", CstI 3, Call(Var "pow8", [ Prim("-", Var "n", CstI 1) ]))),
+        Call(Var "pow8", [ CstI 8 ])
     )
 
 // 3.
 let ex8 =
     Letfun(
         "pow",
-        "n",
-        If(Prim("=", Var "n", CstI 0), CstI 1, Prim("*", CstI 3, Call(Var "pow", Prim("-", Var "n", CstI 1)))),
+        [ "n" ],
+        If(Prim("=", Var "n", CstI 0), CstI 1, Prim("*", CstI 3, Call(Var "pow", [ Prim("-", Var "n", CstI 1) ]))),
         Letfun(
             "sumPow",
-            "n",
+            [ "n" ],
             If(
                 Prim("=", Var "n", CstI 0),
                 CstI 1,
-                Prim("+", Call(Var "pow", Var "n"), Call(Var "sumPow", Prim("-", Var "n", CstI 1)))
+                Prim("+", Call(Var "pow", [ Var "n" ]), Call(Var "sumPow", [ Prim("-", Var "n", CstI 1) ]))
             ),
-            Call(Var "sumPow", CstI 11)
+            Call(Var "sumPow", [ CstI 11 ])
         )
     )
 
@@ -166,21 +175,21 @@ let ex8 =
 let ex9 =
     Letfun(
         "term",
-        "x",
+        [ "x" ],
         Letfun(
             "p",
-            "n",
-            If(Prim("=", Var "n", CstI 0), CstI 1, Prim("*", Var "x", Call(Var "p", Prim("-", Var "n", CstI 1)))),
-            Call(Var "p", CstI 8)
+            [ "n" ],
+            If(Prim("=", Var "n", CstI 0), CstI 1, Prim("*", Var "x", Call(Var "p", [ Prim("-", Var "n", CstI 1) ]))),
+            Call(Var "p", [ CstI 8 ])
         ),
         Letfun(
             "sum10",
-            "n",
+            [ "n" ],
             If(
                 Prim("=", Var "n", CstI 0),
                 CstI 0,
-                Prim("+", Call(Var "term", Var "n"), Call(Var "sum10", Prim("-", Var "n", CstI 1)))
+                Prim("+", Call(Var "term", [ Var "n" ]), Call(Var "sum10", [ Prim("-", Var "n", CstI 1) ]))
             ),
-            Call(Var "sum10", CstI 10)
+            Call(Var "sum10", [ CstI 10 ])
         )
     )
