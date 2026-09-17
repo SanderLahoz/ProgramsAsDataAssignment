@@ -184,3 +184,15 @@ and not dotnet 10 so if you need to follow the same instructions make sure to re
 ## (Exercise 4.2)
 Find our implementation of these expressions inside of the Fun/Fun.fs file we have annotated the code 
 with a comment so that you can see what we wrote.
+
+## (Exercise 4.3)
+Changes are in Fun/Absyn.fs (Letfun now takes a string list of parameters, Call now takes 
+an expr list of arguments) and Fun/Fun.fs (Closure carries a string list, and the Call case 
+zips parameters with evaluated arguments using List.zip). We also had to apply the same 
+changes to Fun/HigherFun.fs and Fun/TypeInference.fs since they share the same Absyn.expr 
+type and would otherwise not type-check.
+
+## Exercise 4.4
+Changes are in Fun/FunPar.fsy: added a Names1 nonterminal for parsing one or more parameter 
+names, used in the Letfun production, and rewrote AppExpr so that a chain of applications 
+(f a b c) builds a single Call with a list of arguments instead of nested Calls.
