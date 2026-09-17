@@ -1,18 +1,18 @@
 # ProgramsAsDataAssignments
 
-##Overview
+## Overview
 
 Ex 1.1 and 1.2 are in the Intro2.fs file in the Intro folder.
 Ex 1.4 is located in the Expr.cs in Exercise1_4_CSharp folder and was written in C#.
 Ex 2.1, 2.2, and 2.3 are in the Intcomp1.fs file in hte Intcomp folder.
 
-##Note
+## Note
 
 To make the code easily distinguishable, every line or section that was written or modified by us was
 annotated with "Written by us" comments (or similar, e.g. TODO notes).
 
 
-##Exercise 1.1 - in Intro2.fs
+## Exercise 1.1 - in Intro2.fs
 
 i) We extended the expr type with a new If(expr, expr, expr) constructor, and extended eval 
 to handle three additional operators: "max", "min", and "==" that return 1 for true, and 0 for false).
@@ -23,7 +23,7 @@ iv) Extended eval to handle the new If(e1, e2, e3) case which evaluates e1, and 
 greater than 0, otherwise evaluates e3.
 
 
-##Exercise 1.2 - in Intro2.fs
+## Exercise 1.2 - in Intro2.fs
 
 i) Declared aexpr without let-bindings, with constructors CstrI, Var, Add, Sub, and Mul.
 ii) Added example expressions e8 to e10 that represent v - (w + z), 2 * (v- (w + z)), and 
@@ -36,7 +36,7 @@ multiplying by one, etc.).
 v) Implemented differentiate: aexpr -> string _> aexpr, which does differentiation by computing
 the symbolic dervative of an arithmetic exoression.
 
-##Exercise 1.4 - in Expr.cs and Program.cs
+## Exercise 1.4 - in Expr.cs and Program.cs
 
 There was an option in the exercise between choosing Java and C#. For this exercise, 
 we are using C#.
@@ -50,7 +50,7 @@ iv) Added Simplify() to Add, Sub, and Mul, implementing the same identity/zero r
 constant folding as the simplify in the 1.2 iv. CstI and Var simplify to themselves.
 
 
-##Exercise 2.1 - in Intcomp1.fs
+## Exercise 2.1 - in Intcomp1.fs
 
 We extended the expr type so taht Let takes a list of string * expr instead of 
 just one, which allows multiple let-bindings that are sequential
@@ -59,7 +59,7 @@ bindings and evaluates each right-hand side within the environment built up by a
 previous bindings in the same let, and then evaluates the body in the final environment.
 
 
-##Exercise 2.2
+## Exercise 2.2
 
 Revised Let in the freevars with aux helper that accumulates the name bound while walking the 
 bindings. For each right-hand side of the bidnings, only the variables that are bound by the
@@ -67,7 +67,7 @@ earlier bindings in the same let are excluded, not the variable that is currentl
 bound, and also not the later bindings.
 
 
-##Exercise 2.3
+## Exercise 2.3
 
 Revised Ler in the tcomp with comp helper that folds over the bindings, produces TLet 
 expressions, and extends the compile time environment cenv with each of the bound
@@ -77,7 +77,7 @@ variable name as it goes. We did not make any chnages to texpr or teval.
 ------------------------------------------------------------------------------------------------
 
 
-##Exercise 2.4 - in Intcomp1.fs
+## Exercise 2.4 - in Intcomp1.fs
 
 We built the following: sinstrToInt that translates a list of byte-code instructions
 into a list of integers. sinstrToInt is called inside assemble for each instruction and
@@ -91,7 +91,7 @@ only required action was to compile Machine.java and run:
 
 % java Machine is1.txt.
 
-##Exercise 3.2
+## Exercise 3.2
 
 We wrote the following regular expression solution: (b|ab)*a?
 
@@ -101,7 +101,7 @@ and created the following NFA and DFA:
 
 ![DFA diagram](Images/DFA.png)
 
-##Exercise 3.3
+## Exercise 3.3
 
 We wrote the rightmost derivation of: let z = (17) in z + 2 * 3 end EOF
 
@@ -117,7 +117,7 @@ Main ⇒ Expr EOF                                                               
 
 
 
-##Exercise 3.4
+## Exercise 3.4
 
 We drew the derivation from Exercise 3.3 as a tree.
 
