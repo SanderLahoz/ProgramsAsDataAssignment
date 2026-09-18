@@ -164,11 +164,11 @@ fromString "1+2*3";;
 fromString "let z = 17 in z + 2*3 end";;
 ```
 
-## (Exercise 3.6)
+## Exercise 3.6
 
 You can find the implementation for this inside Expr/Parse.fs see function compString.
 
-## (Exercise 3.7)
+## Exercise 3.7
 
 For this we changed the following files 
 1. Expr/ExprLex.fsl
@@ -177,15 +177,15 @@ For this we changed the following files
 4. Expr/Expr.fs
 
 
-## (Exercise 4.1)
+## Exercise 4.1
 We followed the instructions to make sure that all of the code works one thing to note is that we use dotnet 9 
 and not dotnet 10 so if you need to follow the same instructions make sure to replace 10.0 with 9.0 
 
-## (Exercise 4.2)
+## Exercise 4.2
 Find our implementation of these expressions inside of the Fun/Fun.fs file we have annotated the code 
 with a comment so that you can see what we wrote.
 
-## (Exercise 4.3)
+## Exercise 4.3
 Changes are in Fun/Absyn.fs (Letfun now takes a string list of parameters, Call now takes 
 an expr list of arguments) and Fun/Fun.fs (Closure carries a string list, and the Call case 
 zips parameters with evaluated arguments using List.zip). We also had to apply the same 
