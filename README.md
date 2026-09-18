@@ -196,3 +196,11 @@ type and would otherwise not type-check.
 Changes are in Fun/FunPar.fsy: added a Names1 nonterminal for parsing one or more parameter 
 names, used in the Letfun production, and rewrote AppExpr so that a chain of applications 
 (f a b c) builds a single Call with a list of arguments instead of nested Calls.
+
+
+------------------------------------------------------------------------------------------------
+
+
+## Exercise 4.5
+For this exercise we made changes to the following files:
+FunPar.fsy and FunLex.fsi
