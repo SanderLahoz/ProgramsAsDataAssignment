@@ -51,12 +51,15 @@ type tyexpr =
     | Letfun of string * string * typ * tyexpr * typ * tyexpr
     (* (f,       x,       xTyp, fBody,  rTyp, letBody *)
     | Call of tyexpr * tyexpr
+    | Nil of typ (* empty list *)
+    | Cons of tyexpr * tyexpr (* List representation: e1 :: e2 *)
 
 (* A runtime value is an integer or a function closure *)
 
 type value =
     | Int of int
     | Closure of string * string * tyexpr * value env (* (f, x, fBody, fDeclEnv) *)
+    | ListV of value list
 
 let rec eval (e: tyexpr) (env: value env) : int =
     match e with
