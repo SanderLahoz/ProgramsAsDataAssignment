@@ -56,3 +56,5 @@ nunit-*.xml
 
 .fake
 .DS_Store
+.vscode/settings.json
+.idea
