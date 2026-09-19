@@ -53,6 +53,9 @@ type tyexpr =
     | Call of tyexpr * tyexpr
     | Nil of typ (* empty list *)
     | Cons of tyexpr * tyexpr (* List representation: e1 :: e2 *)
+    | Match of tyexpr * tyexpr * string * string * tyexpr
+(*      list,  nilCase, hd,     tl,     consCase *)
+
 
 (* A runtime value is an integer or a function closure *)
 
