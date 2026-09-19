@@ -36,7 +36,7 @@ let rec lookup env x =
 type typ =
     | TypI (* int                         *)
     | TypB (* bool                        *)
-    | TypL (* list, element type is typ   *)
+    | TypL of typ (* list, element type is typ   *)
     | TypF of typ * typ (* (argumenttype, resulttype)  *)
 
 (* New abstract syntax with explicit types, instead of Absyn.expr: *)
@@ -160,6 +160,25 @@ let rec typ (e: tyexpr) (env: typ env) : typ =
                 failwith "Call: wrong argument type"
         | _ -> failwith "Call: unknown function"
     | Call(_, eArg) -> failwith "Call: illegal function in call"
+    | Nil t -> TypL t
+    | Cons(e1, e2) ->
+        let t1 = typ e1 env
+
+        match typ e2 env with
+        | TypL t2 when t1 = t2 -> TypL t1
+        | TypL _ -> failwith "Cons: element type mismatch"
+        | _ -> failwith "Cons: tail is not a list"
+    | Match(e, e1, x, xs, e2) ->
+        match typ e env with
+        | TypL t ->
+            let t1 = typ e1 env
+            let t2 = typ e2 ((x, t) :: (xs, TypL t) :: env)
+
+            if t1 = t2 then
+                t1
+            else
+                failwith "Match: branch types differ"
+        | _ -> failwith "Match: t is not a list"
 
 let typeCheck e = typ e []
 
