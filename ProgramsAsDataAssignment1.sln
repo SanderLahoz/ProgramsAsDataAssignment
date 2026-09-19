@@ -11,6 +11,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Fun", "Fun", "{3622222A-C68
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "parse", "Fun\parse.fsproj", "{2666E756-75C7-42F4-8B98-873F184AD0AC}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TypedFun", "TypedFun", "{01560E40-DD8A-4CF0-0914-57E10B33C71B}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "typedfun", "TypedFun\typedfun.fsproj", "{FD95DFA7-9B2A-4AE9-BE88-BC4723D6F4A6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +49,18 @@ Global
 		{2666E756-75C7-42F4-8B98-873F184AD0AC}.Release|x64.Build.0 = Release|Any CPU
 		{2666E756-75C7-42F4-8B98-873F184AD0AC}.Release|x86.ActiveCfg = Release|Any CPU
 		{2666E756-75C7-42F4-8B98-873F184AD0AC}.Release|x86.Build.0 = Release|Any CPU
+		{FD95DFA7-9B2A-4AE9-BE88-BC4723D6F4A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD95DFA7-9B2A-4AE9-BE88-BC4723D6F4A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD95DFA7-9B2A-4AE9-BE88-BC4723D6F4A6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FD95DFA7-9B2A-4AE9-BE88-BC4723D6F4A6}.Debug|x64.Build.0 = Debug|Any CPU
+		{FD95DFA7-9B2A-4AE9-BE88-BC4723D6F4A6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FD95DFA7-9B2A-4AE9-BE88-BC4723D6F4A6}.Debug|x86.Build.0 = Debug|Any CPU
+		{FD95DFA7-9B2A-4AE9-BE88-BC4723D6F4A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD95DFA7-9B2A-4AE9-BE88-BC4723D6F4A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD95DFA7-9B2A-4AE9-BE88-BC4723D6F4A6}.Release|x64.ActiveCfg = Release|Any CPU
+		{FD95DFA7-9B2A-4AE9-BE88-BC4723D6F4A6}.Release|x64.Build.0 = Release|Any CPU
+		{FD95DFA7-9B2A-4AE9-BE88-BC4723D6F4A6}.Release|x86.ActiveCfg = Release|Any CPU
+		{FD95DFA7-9B2A-4AE9-BE88-BC4723D6F4A6}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -52,5 +68,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{7E4E43D5-CB9B-483A-9646-763237E6340B} = {F307C669-7CC5-D57B-CA32-C0AE5E8332AE}
 		{2666E756-75C7-42F4-8B98-873F184AD0AC} = {3622222A-C685-51CA-F669-E159FFB48FD2}
+		{FD95DFA7-9B2A-4AE9-BE88-BC4723D6F4A6} = {01560E40-DD8A-4CF0-0914-57E10B33C71B}
 	EndGlobalSection
 EndGlobal
