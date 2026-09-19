@@ -33,6 +33,7 @@ let rec lookup env x =
 
 (* A type is int, bool or function *)
 
+// We extended this
 type typ =
     | TypI (* int                         *)
     | TypB (* bool                        *)
@@ -41,6 +42,7 @@ type typ =
 
 (* New abstract syntax with explicit types, instead of Absyn.expr: *)
 
+// We extended this
 type tyexpr =
     | CstI of int
     | CstB of bool
@@ -59,11 +61,13 @@ type tyexpr =
 
 (* A runtime value is an integer or a function closure *)
 
+// We extended this
 type value =
     | Int of int
     | Closure of string * string * tyexpr * value env (* (f, x, fBody, fDeclEnv) *)
     | ListV of value list
 
+// We updated/extended this
 let rec eval (e: tyexpr) (env: value env) : value =
     match e with
     | CstI i -> Int i
@@ -114,6 +118,8 @@ let rec eval (e: tyexpr) (env: value env) : value =
 
 (* Type checking for the first-order functional language: *)
 
+
+// We extended this
 let rec typ (e: tyexpr) (env: typ env) : typ =
     match e with
     | CstI i -> TypI
@@ -225,3 +231,18 @@ let exErr3 =
 
 let exErr4 =
     Letfun("f", "x", TypB, If(Var "x", CstI 11, CstI 22), TypB, Call(Var "f", CstB true))
+
+
+// Example code for summing a list
+// We wrote this
+let exList = Cons(CstI 1, Cons(CstI 2, Cons(CstI 3, Nil TypI)))
+
+let exSum =
+    Letfun(
+        "sum",
+        "xs",
+        TypL TypI,
+        Match(Var "xs", CstI 0, "y", "ys", Prim("+", Var "y", Call(Var "sum", Var "ys"))),
+        TypI,
+        Call(Var "sum", exList)
+    )
