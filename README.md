@@ -204,3 +204,7 @@ names, used in the Letfun production, and rewrote AppExpr so that a chain of app
 ## Exercise 4.5
 For this exercise we made changes to the following files:
 FunPar.fsy and FunLex.fsi
+
+## Exercise 5.7
+Find the changes made for this exercise in the following file: TypedFun/TypedFun.fs
+We have annotated code that we wrote, extended and/or updated.
