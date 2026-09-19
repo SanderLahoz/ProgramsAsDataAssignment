@@ -64,45 +64,53 @@ type value =
     | Closure of string * string * tyexpr * value env (* (f, x, fBody, fDeclEnv) *)
     | ListV of value list
 
-let rec eval (e: tyexpr) (env: value env) : int =
+let rec eval (e: tyexpr) (env: value env) : value =
     match e with
-    | CstI i -> i
-    | CstB b -> if b then 1 else 0
-    | Var x ->
-        match lookup env x with
-        | Int i -> i
-        | _ -> failwith "eval Var"
+    | CstI i -> Int i
+    | CstB b -> Int(if b then 1 else 0)
+    | Var x -> lookup env x
     | Prim(ope, e1, e2) ->
-        let i1 = eval e1 env
-        let i2 = eval e2 env
+        let v1 = eval e1 env
+        let v2 = eval e2 env
 
-        match ope with
-        | "*" -> i1 * i2
-        | "+" -> i1 + i2
-        | "-" -> i1 - i2
-        | "=" -> if i1 = i2 then 1 else 0
-        | "<" -> if i1 < i2 then 1 else 0
-        | _ -> failwith "unknown primitive"
+        match ope, v1, v2 with
+        | "*", Int i1, Int i2 -> Int(i1 * i2)
+        | "+", Int i1, Int i2 -> Int(i1 + i2)
+        | "-", Int i1, Int i2 -> Int(i1 - i2)
+        | "=", Int i1, Int i2 -> Int(if i1 = i2 then 1 else 0)
+        | "<", Int i1, Int i2 -> Int(if i1 < i2 then 1 else 0)
+        | _ -> failwith "unknown primitive, or wrong argument type"
     | Let(x, eRhs, letBody) ->
-        let xVal = Int(eval eRhs env)
+        let xVal = eval eRhs env
         let bodyEnv = (x, xVal) :: env
         eval letBody bodyEnv
     | If(e1, e2, e3) ->
-        let b = eval e1 env
-        if b <> 0 then eval e2 env else eval e3 env
+        match eval e1 env with
+        | Int 0 -> eval e3 env
+        | Int _ -> eval e2 env
+        | _ -> failwith "If: condition not int/bool"
     | Letfun(f, x, _, fBody, _, letBody) ->
         let bodyEnv = (f, Closure(f, x, fBody, env)) :: env
         eval letBody bodyEnv
     | Call(Var f, eArg) ->
-        let fClosure = lookup env f
-
-        match fClosure with
-        | Closure(f, x, fBody, fDeclEnv) ->
-            let xVal = Int(eval eArg env)
-            let fBodyEnv = (x, xVal) :: (f, fClosure) :: fDeclEnv
-            eval fBody fBodyEnv
+        match lookup env f with
+        | Closure(f, x, fBody, fDeclEnv) as fClosure ->
+            let xVal = eval eArg env
+            eval fBody ((x, xVal) :: (f, fClosure) :: fDeclEnv)
         | _ -> failwith "eval Call: not a function"
     | Call _ -> failwith "illegal function in Call"
+    | Nil _ -> ListV []
+    | Cons(e1, e2) ->
+        let v1 = eval e1 env
+
+        match eval e2 env with
+        | ListV vs -> ListV(v1 :: vs)
+        | _ -> failwith "Cons: tail is not a list"
+    | Match(e, e1, x, xs, e2) ->
+        match eval e env with
+        | ListV [] -> eval e1 env
+        | ListV(v :: vs) -> eval e2 ((x, v) :: (xs, ListV vs) :: env)
+        | _ -> failwith "Match: not a list"
 
 (* Type checking for the first-order functional language: *)
 
