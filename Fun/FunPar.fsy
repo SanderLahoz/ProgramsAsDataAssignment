@@ -14,7 +14,6 @@
 %token ELSE END FALSE IF IN LET NOT THEN TRUE
 %token PLUS MINUS TIMES DIV MOD
 %token EQ NE GT LT GE LE
-%token AND OR
 %token LPAR RPAR 
 %token EOF
 
@@ -22,9 +21,7 @@
 %left EQ NE 
 %left GT LT GE LE
 %left PLUS MINUS
-%left TIMES DIV MOD
-%left OR
-%left AND 
+%left TIMES DIV MOD 
 %nonassoc NOT           /* highest precedence  */
 
 %start Main
@@ -53,31 +50,22 @@ Expr:
   | Expr LT    Expr                     { Prim("<",  $1, $3)     }
   | Expr GE    Expr                     { Prim(">=", $1, $3)     }
   | Expr LE    Expr                     { Prim("<=", $1, $3)     }
-  | Expr AND   Expr                     { If($1, $3, CstB false) }
-  | Expr OR    Expr                     { If($1, CstB true, $3)  }
 ;
 
 AtExpr:
     Const                               { $1                     }
   | NAME                                { Var $1                 }
   | LET NAME EQ Expr IN Expr END        { Let($2, $4, $6)        }
-  | LET NAME Names1 EQ Expr IN Expr END { Letfun($2, $3, $5, $7) }
+  | LET NAME NAME EQ Expr IN Expr END   { Letfun($2, $3, $5, $7) }
   | LPAR Expr RPAR                      { $2                     }
 ;
 
 AppExpr:
-    AtExpr AtExpr                       { Call($1, [$2])           }
-  | AppExpr AtExpr                      {  match $1 with
-                                             | Call(f, args) -> Call(f, args @ [$2])
-                                             | _              -> Call($1, [$2]) }
+    AtExpr AtExpr                       { Call($1, $2)           }
+  | AppExpr AtExpr                      { Call($1, $2)           }
 ;
 
 Const:
     CSTINT                              { CstI($1)               }
   | CSTBOOL                             { CstB($1)               }
-;
-
-Names1:
-    NAME                                  { [$1]     }
-  | NAME Names1                           { $1 :: $2 }
 ;
