@@ -210,3 +210,8 @@ Find the changes made for this exercise in the following file: TypedFun/TypedFun
 We have annotated code that we wrote, extended and/or updated.
 
 ## Exercise 6.1
+Cd into /Fun and run the commands in the README.md.
+
+Result of the third one explanation:
+
+Result of the last explantation:
