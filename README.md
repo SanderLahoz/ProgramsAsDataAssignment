@@ -213,8 +213,17 @@ We have annotated code that we wrote, extended and/or updated.
 Cd into /Fun and run the commands in the README.md.
 
 Result of the third one explanation:
+We excepted an error when parsing.
+What happens is that there is no whitespace in "inletsx=77inaddtwo" seperating tokens, so it
+just takes everything as variable names: in, let, x, in, addtwo.
+This means we wont have a token stream that match any grammar production with error:
+Correct micro-ML requires whitespace between keywords/identifiers, e.g. "in let x = 77 in addtwo 5".
 
 Result of the last explantation:
+add expects 2 arguments.
+but if add is not given 2 arguments, it will then return another function, that expects
+the last argument (y) and this behavior produces/returns a new closure. 
+Thus allowing for currying in our MicroML.
 
 ## Exercise 6.2 & Exercise 6.3
 Find the changes made for this exercise in the following files: Fun/Absyn.fs, Fun/FunLex.fsl, 
