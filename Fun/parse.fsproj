@@ -15,6 +15,7 @@
     <Compile Include="Absyn.fs" />
     <Compile Include="FunPar.fs" />        
     <Compile Include="FunLex.fs" />
+    <Compile Include="HigherFun.fs" />
     <Compile Include="Parse.fs" />
   </ItemGroup>
 

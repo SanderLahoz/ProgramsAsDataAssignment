@@ -215,3 +215,8 @@ Cd into /Fun and run the commands in the README.md.
 Result of the third one explanation:
 
 Result of the last explantation:
+
+## Exercise 6.2
+Find the changes made for this exercise in the following files: Fun/Absyn.fs, Fun/FunLex.fsl, 
+Fun/FunPar.fsy, Fun/HigherFun.fs
+
