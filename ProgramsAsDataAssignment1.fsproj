@@ -5,8 +5,12 @@
     <TargetFramework>net9.0</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup><Compile Include="Intro\Intro2.fs" />
+  <ItemGroup>
     <Compile Include="Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="MicroC/parse.fsproj" />
   </ItemGroup>
 
 </Project>
