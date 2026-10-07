@@ -20,6 +20,8 @@ and expr =
   | CstI of int                      (* Constant                    *)
   | Prim1 of string * expr           (* Unary primitive operator    *)
   | Prim2 of string * expr * expr    (* Binary primitive operator   *)
+  | PreInc of access                 (* C/C++/Java/C# ++i or ++a[e] *)
+  | PreDec of access                 (* C/C++/Java/C#--i or--a[e]   *)
   | Andalso of expr * expr           (* Sequential and              *)
   | Orelse of expr * expr            (* Sequential or               *)
   | Call of string * expr list       (* Function call f(...)        *)
