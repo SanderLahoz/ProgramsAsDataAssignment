@@ -174,12 +174,14 @@ and eval e locEnv gloEnv store : int * store =
         (res, setSto store2 loc res)
     | CstI i -> (i, store)
     | Addr acc -> access acc locEnv gloEnv store
-    | PreInc acc     -> let (loc, store1) = access acc locEnv gloEnv store
-                        let res = getSto store1 loc + 1
-                        (res, setSto store1 loc res)
-    | PreDec acc     -> let (loc, store1) = access acc locEnv gloEnv store
-                        let res = getSto store1 loc - 1
-                        (res, setSto store1 loc res)
+    | PreInc acc ->
+        let (loc, store1) = access acc locEnv gloEnv store
+        let res = getSto store1 loc + 1
+        (res, setSto store1 loc res)
+    | PreDec acc ->
+        let (loc, store1) = access acc locEnv gloEnv store
+        let res = getSto store1 loc - 1
+        (res, setSto store1 loc res)
     | Prim1(ope, e1) ->
         let (i1, store1) = eval e1 locEnv gloEnv store
 
@@ -260,7 +262,7 @@ and callfun f es locEnv gloEnv store : int * store =
    and global environments, then invoking its `main' function.
  *)
 
-let run (Prog topdecs) vs =
+let run (Prog(topdecs: topdec list)) vs =
     let ((varEnv, nextloc), funEnv, store0) = initEnvAndStore topdecs
     let (mainParams, mainBody) = lookup funEnv "main"
 
@@ -270,36 +272,3 @@ let run (Prog topdecs) vs =
     exec mainBody mainBodyEnv (varEnv, funEnv) store1
 
 (* Example programs are found in the files ex1.c, ex2.c, etc *)
-
-and callfun f es locEnv gloEnv store : int * store =
-    let (_, nextloc) = locEnv
-    let (varEnv, funEnv) = gloEnv
-    let (paramdecs, fBody) = lookup funEnv f
-    let (vs, store1) = evals es locEnv gloEnv store
-
-    let (fBodyEnv, store2) =
-        bindVars (List.map snd paramdecs) vs (varEnv, nextloc) store1
-
-    let store3 = exec fBody fBodyEnv gloEnv store2
-    (-111, store3)
-
-(* Interpret a complete micro-C program by initializing the store 
-   and global environments, then invoking its `main' function.
- *)
-
-let run (Prog topdecs) vs =
-    let ((varEnv, nextloc), funEnv, store0) = initEnvAndStore topdecs
-    let (mainParams, mainBody) = lookup funEnv "main"
-
-    let (mainBodyEnv, store1) =
-        bindVars (List.map snd mainParams) vs (varEnv, nextloc) store0
-
-    exec mainBody mainBodyEnv (varEnv, funEnv) store1
-
-(* Example programs are found in the files ex1.c, ex2.c, etc *)
-    let (mainBodyEnv, store1) = 
-        bindVars (List.map snd mainParams) vs (varEnv, nextloc) store0
-    exec mainBody mainBodyEnv (varEnv, funEnv) store1
-
-(* Example programs are found in the files ex1.c, ex2.c, etc *)
-
