@@ -229,3 +229,21 @@ Thus allowing for currying in our MicroML.
 Find the changes made for this exercise in the following files: Fun/Absyn.fs, Fun/FunLex.fsl, 
 Fun/FunPar.fsy, Fun/HigherFun.fs
 
+------------------------------------------------------------------------------------------------
+
+## Exercise 7.4
+
+## Exercise 7.5
+
+## Exercise 8.1 (i) - in MicroC
+We built the compiler as it was described in the MicroC READEM. It was compiled with CEx/ex11.c
+with compileToFile and ran it with "java Machine CEx/ex11.out 8". It printed all fo the 92
+solutions to the 8 queens problem.
+
+## Exercise 8.3 - in MicroC/Comp.fs
+We added PreInc and PreDec cases to the cExpr. They both compile to the address code
+from the cAccess and then followed by DUP, LDI, CSTI 1, ADD for PreInc and SUB for PreDec, 
+and STI, the address is then compiled once instead of twice like it would with e = e + 1.
+It was tehn tested with preinc.c and n = 5, and it printed "6 4".
+
+## Exercise 8.4
