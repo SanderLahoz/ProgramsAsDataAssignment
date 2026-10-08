@@ -246,4 +246,13 @@ from the cAccess and then followed by DUP, LDI, CSTI 1, ADD for PreInc and SUB f
 and STI, the address is then compiled once instead of twice like it would with e = e + 1.
 It was tehn tested with preinc.c and n = 5, and it printed "6 4".
 
-## Exercise 8.4
+## Exercise 8.4 - in MicroC
+Regarding ex08.c compared to prog1
+The loop in ex08.c executes 17 instructions per iteration, while prog1 only executes 4.
+Prog1 also keeps the counter on the stack compared to ex08.c which stores "i" in memory and recomputes its address 3 times per iteration.
+
+Regarding ex13.c
+The while loop has its test at the bottom, so it only needs one conditional jump per iteration. The if-statement with && and || is compiled into code
+that pushes either 0 or 1 which the if then tests again. This causes exstra labels and jumps created, for example at L7 the code pushes 0 just so the
+if-statement can immediatly test it and then just jumps to L4, when it could have went to L4 in the first place.
+
