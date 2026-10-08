@@ -232,8 +232,11 @@ Fun/FunPar.fsy, Fun/HigherFun.fs
 ------------------------------------------------------------------------------------------------
 
 ## Exercise 7.4
+Find the implementation for this inside the Absyn.fs file and the Interp.fs file specifically 
+The eval function.
 
 ## Exercise 7.5
+Find the changes made to the lexer and parser inside the CLex.fsl and CPar.fsy files
 
 ## Exercise 8.1 (i) - in MicroC
 We built the compiler as it was described in the MicroC READEM. It was compiled with CEx/ex11.c
