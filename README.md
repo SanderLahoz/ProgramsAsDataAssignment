@@ -229,3 +229,35 @@ Thus allowing for currying in our MicroML.
 Find the changes made for this exercise in the following files: Fun/Absyn.fs, Fun/FunLex.fsl, 
 Fun/FunPar.fsy, Fun/HigherFun.fs
 
+------------------------------------------------------------------------------------------------
+
+## Exercise 7.4
+Find the implementation for this inside the Absyn.fs file and the Interp.fs file specifically 
+The eval function.
+
+## Exercise 7.5
+Find the changes made to the lexer and parser inside the CLex.fsl and CPar.fsy files
+
+## Exercise 8.1 (i) - in MicroC
+We built the compiler as it was described in the MicroC READEM. It was compiled with CEx/ex11.c
+with compileToFile and ran it with "java Machine CEx/ex11.out 8". It printed all fo the 92
+solutions to the 8 queens problem.
+
+## Exercise 8.3 - in MicroC/Comp.fs
+We added PreInc and PreDec cases to the cExpr. They both compile to the address code
+from the cAccess and then followed by DUP, LDI, CSTI 1, ADD for PreInc and SUB for PreDec, 
+and STI, the address is then compiled once instead of twice like it would with e = e + 1.
+It was tehn tested with preinc.c and n = 5, and it printed "6 4".
+
+## Exercise 8.4 - in MicroC
+Regarding ex08.c compared to prog1
+The loop in ex08.c executes 17 instructions per iteration, while prog1 only executes 4.
+Prog1 also keeps the counter on the stack compared to ex08.c which stores "i" in memory and recomputes its address 3 times per iteration.
+
+Regarding ex13.c
+The while loop has its test at the bottom, so it only needs one conditional jump per iteration. The if-statement with && and || is compiled into code
+that pushes either 0 or 1 which the if then tests again. This causes exstra labels and jumps created, for example at L7 the code pushes 0 just so the
+if-statement can immediatly test it and then just jumps to L4, when it could have went to L4 in the first place.
+
+
+------------------------------------------------------------------------------------------------
