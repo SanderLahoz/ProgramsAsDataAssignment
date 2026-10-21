@@ -220,6 +220,23 @@ let rec cStmt stmt (varEnv: varEnv) (funEnv: funEnv) (c: instr list) : instr lis
         pass2
             stmtsback
             (addINCSP (snd varEnv - fdepthend) c) (* Remove variables, declared in the block, from the stack *)
+    | Switch(e, cases) ->
+        let (jumpend, c1) = makeJump c
+
+        let rec cCases cases =
+            match cases with
+            | [] -> addINCSP -1 c1 // no match: pop, then continue
+            | (k, body) :: rest ->
+                let (labnext, cnext) = addLabel (cCases rest)
+
+                DUP
+                :: CSTI k
+                :: EQ
+                :: IFZERO labnext
+                :: INCSP -1
+                :: cStmt body varEnv funEnv (addJump jumpend cnext)
+
+        cExpr e varEnv funEnv (cCases cases)
     | Return None -> RET(snd varEnv - 1) :: deadcode c
     | Return(Some e) -> cExpr e varEnv funEnv (RET(snd varEnv) :: deadcode c)
 
