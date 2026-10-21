@@ -154,6 +154,13 @@ let rec exec stmt (locEnv: locEnv) (gloEnv: gloEnv) (store: store) : store =
             | s1 :: sr -> loop sr (stmtordec s1 locEnv gloEnv store)
 
         loop stmts (locEnv, store)
+
+    | Switch(e, cases) ->
+        let (v, store1) = eval e locEnv gloEnv store
+
+        match List.tryFind (fun (k, _) -> k = v) cases with
+        | Some(_, body) -> exec body locEnv gloEnv store1
+        | None -> store1
     | Return _ -> failwith "return not implemented"
 
 and stmtordec stmtordec locEnv gloEnv store =
