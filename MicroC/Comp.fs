@@ -154,6 +154,21 @@ let rec cStmt stmt (varEnv: varEnv) (funEnv: funEnv) : instr list =
 
         code
         @ [ INCSP(snd varEnv - fdepthend) ] (* Remove variables, declared in the block, from the stack *)
+    | Switch(e, cases) ->
+        let labend = newLabel ()
+
+        let rec cCases cases =
+            match cases with
+            | [] -> [ INCSP -1 ] // no case matched: pop the value
+            | (k, body) :: rest ->
+                let labnext = newLabel ()
+
+                [ DUP; CSTI k; EQ; IFZERO labnext; INCSP -1 ]
+                @ cStmt body varEnv funEnv
+                @ [ GOTO labend; Label labnext ] // no fall-through
+                @ cCases rest
+
+        cExpr e varEnv funEnv @ cCases cases @ [ Label labend ]
     | Return None -> [ RET(snd varEnv - 1) ]
     | Return(Some e) -> cExpr e varEnv funEnv @ [ RET(snd varEnv) ]
 
