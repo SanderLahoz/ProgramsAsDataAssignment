@@ -261,3 +261,12 @@ if-statement can immediatly test it and then just jumps to L4, when it could hav
 
 
 ------------------------------------------------------------------------------------------------
+
+## Exercise 8.5
+Conditional expressions are added in Absyn.fs (Cond), CLex.lex (QMARK and COLON tokens), CPar.fsy (the Expr QMARK Expr COLON Expr rule), 
+the cExpr function in Comp.fs and Contcomp.fs, and the eval function in Interp.fs.
+
+## Exercise 8.6
+Switch statements are added in Absyn.fs (Switch), CLex.lex (SWITCH and CASE keywords), CPar.fsy (the SWITCH rule in StmtM and the Cases rule), 
+the cStmt function in Comp.fs and Contcomp.fs, and the exec function in Interp.fs.
+It was tested with CEx/condAndSwitch.c and month = 2, and it printed "29 0".
