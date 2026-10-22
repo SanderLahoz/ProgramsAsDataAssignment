@@ -270,3 +270,23 @@ the cExpr function in Comp.fs and Contcomp.fs, and the eval function in Interp.f
 Switch statements are added in Absyn.fs (Switch), CLex.lex (SWITCH and CASE keywords), CPar.fsy (the SWITCH rule in StmtM and the Cases rule), 
 the cStmt function in Comp.fs and Contcomp.fs, and the exec function in Interp.fs.
 It was tested with CEx/condAndSwitch.c and month = 2, and it printed "29 0".
+
+## Exercise 9.1
+
+## Exercise 9.3
+When running the program for the first time with "java -Xmx100m QueueWithMistake", we were getting this error, which meant that it was 
+running out of memory:
+Exception: java.lang.OutOfMemoryError thrown from the UncaughtExceptionHandler in thread "Thread-0"
+Exception in thread "main" java.lang.OutOfMemoryError: Java heap space
+at QueueWithMistake.runThreads(QueueWithMistake.java:58)
+at QueueWithMistake.main(QueueWithMistake.java:28)
+
+The problem was that dummy was a field in SentinelLockQueue, its node pointed to the first node that was added to the queue, which pointed 
+to the enxt one, etc., so every node which was created was never freed from the garbage collector.
+We changed dummy to be a local variable in a new constructor instead of a field, so only the head and tail would point into the queue.
+We ran the same command afterwards and got:
+SentinelLockQueue          1       1.22 199999994
+SentinelLockQueue          2      18.73 199999994
+SentinelLockQueue          3      38.78 199999994
+
+The program after ran without running out of memory. (We stopped it after 3 lines becuase otherwise it would run very long.)
