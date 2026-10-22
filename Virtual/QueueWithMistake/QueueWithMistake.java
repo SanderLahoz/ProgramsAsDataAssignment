@@ -85,9 +85,16 @@ class SentinelLockQueue implements Queue {
       this.next = next;
     }
   }
+  
+  //Written by us (Exercise 9.3)
+  private Node head, tail;
 
-  private final Node dummy = new Node(-444, null);
-  private Node head = dummy, tail = dummy;
+  public SentinelLockQueue() {
+    Node dummy = new Node(-444, null);
+    head = tail = dummy;          
+  }    
+  
+  
   
   public synchronized boolean put(int item) {
     Node node = new Node(item, null);
