@@ -504,11 +504,7 @@ void initheap() {
   freelist = &heap[0];
 }
 
-/*
-Mark everything reachable from block. White = unvisited, Black = visited.
-The colour test also stops infinite recursion on cyclic structures.
-The last child is followed iteratively so long lists don't overflow the C stack.
-*/
+
 void mark(word* block){
   while (block != 0 && Color(block[0]) == White){
     word n = Length(block[0]);
@@ -524,27 +520,38 @@ void mark(word* block){
     block = next;
   }
 }
+
 // the updated markPhase,
 void markPhase(word s[], word sp){
   if (!silent) printf("GC[M");
   for (word i = 0; i <= sp; i++)
     if (!IsInt(s[i]) && s[i] != NILVALUE)
       mark((word*)s[i]);
+  
 }
 // The updated sweepPhase,
 void sweepPhase() {
   if (!silent) printf(",");
   word* p = heap;
-  while (p < afterHeap){
-    word hdr = p[0];
-    if (Color(hdr) == White) {
-      p[0] = Paint(hdr, Blue);
+  while (p < afterHeap) {
+    if (Color(p[0]) == White) {
+      word len = Length(p[0]);
+      word* next = p + len + 1;
+      while (next < afterHeap && Color(next[0]) == White) {
+        len += Length(next[0]) + 1;
+        next = p + len + 1;
+      }
+      p[0] = mkheader(0, len, Blue);
       p[1] = (word)freelist;
       freelist = p;
-    } else if (Color(hdr) == Black) {
-      p[0] = Paint(hdr, White);
+      p = next;
+    } 
+    else 
+    {
+      if (Color(p[0]) == Black) p[0] = Paint(p[0], White);
+      p += Length(p[0]) + 1;
     }
-    p += Length(hdr) + 1;
+    
   }
   if (!silent) printf("BS]");
 }
