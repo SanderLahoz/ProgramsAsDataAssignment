@@ -291,3 +291,29 @@ SentinelLockQueue          2      18.73 199999994
 SentinelLockQueue          3      38.78 199999994
 
 The program after ran without running out of memory. (We stopped it after 3 lines becuase otherwise it would run very long.)
+
+
+------------------------------------------------------------------------------------------------
+
+## Exercise 10.1
+
+(i) 
+- ADD: The two operands are stored as tagged integers so the VM knows if they are small therefor it starts by untagging with Untag(v) = v>>1, then it adds them together and retags them with Tag(x) = (x<<1)|1. The result is stored at s[sp-1] and sp is tdecremented. Net effect: pop two values and push their sum.
+
+- CSTI i: The operand i is read from the program array (p[pc++]), where it is stored untagged. The machine tags it and pushes it: s[sp+1] = Tag(p[pc++]); sp++. The pushed value is a tagged integer, so the GC will never follow it.
+
+- NIL: The machine pushes NILVALUE. Even though both represent a form of "zero," the VM distinguishes them using their low bits: NIL pushes raw word 0 (low bit 0, signaling a null memory reference), whereas CSTI 0 pushes 1 (low bit 1, signaling a tagged integer). Because they have different raw bit patterns, an equality check sees them as distinct, and the Garbage Collector treats them differently—automatically skipping tagged integers while explicitly checking for null references. This is why local variables are initialized with NIL rather than integer zero.
+
+- IFZERO: The machine pops v. If IsInt(v), it tests Untag(v) == 0. Otherwise v is a reference, and it tests v == 0, that is, whether it is nil. If the test succeeds, pc is set to the jump target p[pc]. Otherwise it skips the operand with pc+1. So 0, false and nil all count as “zero”.
+
+- CONS. The machine calls allocate(CONSTAG, 2, s, sp), which returns a block with a header and two payload words. This call may trigger a garbage collection. It then stores s[sp-1] (the car) in p[1] and s[sp] (the cdr) in p[2], writes the pointer to the new block into s[sp-1], and decrements sp. The two operands stay on the stack until the block is filled in, so they are still roots if allocate runs a GC.
+
+- CAR. The machine reads the reference on top of the stack. If it is 0 (nil), it prints “Cannot take car of null” and stops. Otherwise it replaces the stack top with the first payload word, p[1]. CDR does the same with p[2].
+
+- SETCAR. The machine pops the new value v (s[sp--]). The cons reference is now on top. It overwrites the car field, p[1] = v. There is no null check. The cons reference stays on the stack as the result, not the stored value.
+
+(ii) 
+
+(iii)
+
+(iv)
