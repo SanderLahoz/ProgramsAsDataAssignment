@@ -314,6 +314,28 @@ The program after ran without running out of memory. (We stopped it after 3 line
 
 (ii) 
 
+The 32-bit header is tttttttt nnnnnnnnnnnnnnnnnnnnnn gg.
+
+- Length(hdr) = ((hdr)>>2) & 0x003FFFFF shifts out the two colour bits and masks the low 22 bits. It returns n, the number of payload words excluding the header.
+
+- Color(hdr) = (hdr)&3 returns the two low bits gg: 0 white, 1 grey, 2 black, 3 blue.
+
+- Paint(hdr,color) = ((hdr)&~3)|(color) clears the two colour bits and ORs in the new colour. The tag and length are unchanged.
+
+- BlockTag(hdr) = (hdr)>>24 returns the top 8 bits.
+
 (iii)
 
+allocate is called only from CONS and HEAPALLOC (the instructions that create heap blocks). Beyond that, the interaction is:
+
+- The GC gets s and sp when allocate calls collect(s, sp). The stack is the root set. The mutators tagging discipline (ints have low bit 1, references have low bit 0, nil is 0) is what lets the GC find roots precisely.
+- The mutator must keep the heap well-formed whenever allocate can run. That is why CONS keeps its operands on the stack until the block is filled, and why HEAPALLOC initialises all fields to Tag(0)
+- The mutator reads and writes block contents directly, with no barrier.
+
+
 (iv)
+
+collect is called from allocate, and only when no block on the freelist is large enough for the request. It is called at most once per allocation request (attempt==1). After the collection allocate retries, and if it still fails it prints “Out of memory” and exits.
+
+
+## Exercise 10.2
