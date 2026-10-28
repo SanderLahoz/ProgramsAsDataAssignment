@@ -504,7 +504,7 @@ void initheap() {
   freelist = &heap[0];
 }
 
-
+//mark
 void mark(word* block){
   while (block != 0 && Color(block[0]) == White){
     word n = Length(block[0]);

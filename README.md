@@ -339,3 +339,11 @@ collect is called from allocate, and only when no block on the freelist is large
 
 
 ## Exercise 10.2
+
+-- Mark function can be found from line: 507 in microvm.c
+
+-- The updated markPhase & sweepPhase(updated in 10.3) can be found between line: 524 - 557 in microvm.c
+
+## Exercise 10.3
+
+-- sweepPhase has been updated. Can be found between line: 533 - 557 in microvm.c
